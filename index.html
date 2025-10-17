@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    max-width: 900px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    min-height: 500px;
+}
+
+.welcome-section {
+    flex: 1;
+    background: linear-gradient(135deg, #4f6df5 0%, #3a56d4 100%);
+    color: white;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.welcome-section h1 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+.welcome-section p {
+    font-size: 1rem;
+    opacity: 0.9;
+    line-height: 1.6;
+}
+
+.form-section {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.form-container {
+    width: 100%;
+}
+
+.form-toggle {
+    display: flex;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.toggle-btn {
+    padding: 12px 0;
+    flex: 1;
+    text-align: center;
+    cursor: pointer;
+    font-weight: 600;
+    color: #777;
+    transition: all 0.3s;
+    border-bottom: 3px solid transparent;
+    font-size: 16px;
+}
+
+.toggle-btn.active {
+    color: #4f6df5;
+    border-bottom: 3px solid #4f6df5;
+}
+
+.form {
+    display: none;
+}
+
+.form.active {
+    display: block;
+    animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.form h2 {
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 1.5rem;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.input-group i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #777;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 15px 15px 15px 45px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s;
+}
+
+.input-group input:focus {
+    border-color: #4f6df5;
+    box-shadow: 0 0 0 2px rgba(79, 109, 245, 0.2);
+    outline: none;
+}
+
+.btn {
+    width: 100%;
+    padding: 15px;
+    background: #4f6df5;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+    position: relative;
+}
+
+.btn:hover {
+    background: #3a56d4;
+}
+
+.btn.loading {
+    color: transparent;
+}
+
+.btn.loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin-left: -10px;
+    margin-top: -10px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    border-right-color: transparent;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.verification-code {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.verification-code input {
+    flex: 1;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    height: 60px;
+    min-width: 45px;
+    max-width: 50px;
+}
+
+.message {
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 15px;
+    text-align: center;
+    display: none;
+    font-size: 14px;
+}
+
+.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+.resend-code {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+    color: #666;
+}
+
+.resend-code a {
+    color: #4f6df5;
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.resend-code a:hover {
+    text-decoration: underline;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        min-height: auto;
+        margin: 10px;
+    }
+    
+    .welcome-section {
+        padding: 30px 20px;
+        min-height: 200px;
+    }
+    
+    .welcome-section h1 {
+        font-size: 1.8rem;
+    }
+    
+    .welcome-section p {
+        font-size: 0.9rem;
+    }
+    
+    .welcome-section i {
+        font-size: 3rem !important;
+    }
+    
+    .form-section {
+        padding: 30px 20px;
+    }
+    
+    .form h2 {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    
+    .container {
+        margin: 5px;
+        border-radius: 10px;
+    }
+    
+    .welcome-section {
+        padding: 25px 15px;
+    }
+    
+    .welcome-section h1 {
+        font-size: 1.5rem;
+    }
+    
+    .form-section {
+        padding: 25px 15px;
+    }
+    
+    .form h2 {
+        font-size: 1.2rem;
+    }
+    
+    .toggle-btn {
+        padding: 10px 0;
+        font-size: 14px;
+    }
+    
+    .input-group input {
+        padding: 12px 12px 12px 40px;
+        font-size: 14px;
+    }
+    
+    .btn {
+        padding: 12px;
+        font-size: 14px;
+    }
+    
+    .verification-code {
+        gap: 5px;
+    }
+    
+    .verification-code input {
+        height: 50px;
+        font-size: 16px;
+        min-width: 40px;
+        max-width: 45px;
+    }
+    
+    .welcome-section i {
+        font-size: 2.5rem !important;
+        margin-top: 10px;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+    .welcome-section h1 {
+        font-size: 1.3rem;
+    }
+    
+    .welcome-section p {
+        font-size: 0.8rem;
+    }
+    
+    .verification-code input {
+        height: 45px;
+        font-size: 14px;
+        min-width: 35px;
+        max-width: 40px;
+    }
+    
+    .form h2 {
+        font-size: 1.1rem;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="welcome-section">
+            <h1>Welcome Back</h1>
+            <p>Sign in to access your portfolio dashboard and manage your content.</p>
+            <div style="margin-top: 30px; font-size: 5rem; opacity: 0.8;">
+                <i class="fas fa-lock"></i>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <div class="form-container">
+                <div class="form-toggle">
+                    <div class="toggle-btn active" id="login-toggle">Login</div>
+                    <div class="toggle-btn" id="signup-toggle">Sign Up</div>
+                </div>
+                
+                <form id="login-form" class="form active">
+                    <h2>Login to Your Account</h2>
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="login-email" placeholder="Email Address" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="login-password" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn" id="login-btn">Login</button>
+                    <div id="login-message" class="message"></div>
+                </form>
+                
+                <form id="signup-form" class="form">
+                    <h2>Create Your Account</h2>
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="signup-name" placeholder="Full Name" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="signup-email" placeholder="Email Address" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="signup-password" placeholder="Password (min. 8 characters)" required minlength="8">
+                    </div>
+                    <button type="submit" class="btn" id="signup-btn">Sign Up</button>
+                    <div id="signup-message" class="message"></div>
+                </form>
+                
+                <form id="verification-form" class="form">
+                    <h2>Verify Your Email</h2>
+                    <p style="margin-bottom: 20px; color: #555;">We've sent a verification code to your email. Please enter it below.</p>
+                    <div class="verification-code">
+                        <input type="text" maxlength="1" class="code-input" inputmode="numeric" pattern="[0-9]*">
+                        <input type="text" maxlength="1" class="code-input" inputmode="numeric" pattern="[0-9]*">
+                        <input type="text" maxlength="1" class="code-input" inputmode="numeric" pattern="[0-9]*">
+                        <input type="text" maxlength="1" class="code-input" inputmode="numeric" pattern="[0-9]*">
+                        <input type="text" maxlength="1" class="code-input" inputmode="numeric" pattern="[0-9]*">
+                        <input type="text" maxlength="1" class="code-input" inputmode="numeric" pattern="[0-9]*">
+                    </div>
+                    <button type="submit" class="btn" id="verify-btn">Verify Email</button>
+                    <div class="resend-code">
+                        Didn't receive the code? <a id="resend-link">Resend Code</a>
+                    </div>
+                    <div id="verification-message" class="message"></div>
+                </form>
+                
+                <form id="success-form" class="form">
+                    <div style="text-align: center; padding: 30px 0;">
+                    <div style="font-size: 5rem; color: #4CAF50; margin-bottom: 20px;">
+                    <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h2 style="color: #333; margin-bottom: 15px;" id="success-title">Successfully Signed In!</h2>
+                <p style="color: #555; margin-bottom: 25px;" id="success-message">You have successfully authenticated and can now access your portfolio dashboard.</p>
+                <p style="color: #888; font-size: 14px; margin-bottom: 25px;">
+                ⚠️ Warning: The logout button will DELETE your account permanently
+                </p>
+                <button type="button" id="logout-btn" class="btn" style="background: #dc3545;">
+                    <i class="fas fa-trash-alt"></i> Delete Account & Logout
+                </button>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration - UPDATE THIS WITH YOUR WORKER URL
+        const API_BASE_URL = 'https://portfolio-auth.devbytho.workers.dev'; // ← UPDATE THIS
+
+        // DOM Elements
+        const loginToggle = document.getElementById('login-toggle');
+        const signupToggle = document.getElementById('signup-toggle');
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const verificationForm = document.getElementById('verification-form');
+        const successForm = document.getElementById('success-form');
+        const codeInputs = document.querySelectorAll('.code-input');
+        const resendLink = document.getElementById('resend-link');
+        const logoutBtn = document.getElementById('logout-btn');
+        const loginBtn = document.getElementById('login-btn');
+        const signupBtn = document.getElementById('signup-btn');
+        const verifyBtn = document.getElementById('verify-btn');
+
+        // State
+        let pendingEmail = '';
+        let sessionToken = '';
+
+        // Toggle between login and signup forms
+        loginToggle.addEventListener('click', () => {
+            loginToggle.classList.add('active');
+            signupToggle.classList.remove('active');
+            loginForm.classList.add('active');
+            signupForm.classList.remove('active');
+            verificationForm.classList.remove('active');
+            successForm.classList.remove('active');
+            clearMessages();
+        });
+
+        signupToggle.addEventListener('click', () => {
+            signupToggle.classList.add('active');
+            loginToggle.classList.remove('active');
+            signupForm.classList.add('active');
+            loginForm.classList.remove('active');
+            verificationForm.classList.remove('active');
+            successForm.classList.remove('active');
+            clearMessages();
+        });
+
+        // Handle code input navigation
+        codeInputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                // Only allow numbers
+                input.value = input.value.replace(/[^0-9]/g, '');
+                
+                if (input.value && index < codeInputs.length - 1) {
+                    codeInputs[index + 1].focus();
+                }
+                
+                // Auto-submit when all fields are filled
+                if (index === codeInputs.length - 1 && input.value) {
+                    const allFilled = Array.from(codeInputs).every(input => input.value);
+                    if (allFilled) {
+                        document.getElementById('verify-btn').click();
+                    }
+                }
+            });
+            
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !input.value && index > 0) {
+                    codeInputs[index - 1].focus();
+                }
+            });
+            
+            input.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const pasteData = e.clipboardData.getData('text').replace(/[^0-9]/g, '');
+                for (let i = 0; i < Math.min(pasteData.length, codeInputs.length); i++) {
+                    codeInputs[i].value = pasteData[i];
+                }
+                if (pasteData.length >= codeInputs.length) {
+                    codeInputs[codeInputs.length - 1].focus();
+                }
+            });
+        });
+
+        // Utility functions
+        function clearMessages() {
+            document.querySelectorAll('.message').forEach(msg => {
+                msg.style.display = 'none';
+            });
+        }
+
+        function showMessage(elementId, message, type) {
+            const messageElement = document.getElementById(elementId);
+            messageElement.textContent = message;
+            messageElement.className = `message ${type}`;
+            messageElement.style.display = 'block';
+            
+            // Scroll to message
+            messageElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function setLoading(button, isLoading) {
+            if (isLoading) {
+                button.disabled = true;
+                button.classList.add('loading');
+            } else {
+                button.disabled = false;
+                button.classList.remove('loading');
+            }
+        }
+
+        // API call function
+        // Improved API call function with better error handling
+async function apiCall(endpoint, data) {
+  try {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    // Check if response is JSON
+    const contentType = response.headers.get('content-type');
+    let result;
+    
+    if (contentType && contentType.includes('application/json')) {
+      result = await response.json();
+    } else {
+      // If not JSON, get the text and try to parse it
+      const text = await response.text();
+      console.error('Non-JSON response:', text);
+      throw new Error(`Server returned non-JSON response: ${text.substring(0, 100)}`);
+    }
+    
+    if (!response.ok) {
+      throw new Error(result.error || `Request failed with status ${response.status}`);
+    }
+
+    return result;
+  } catch (error) {
+    console.error('API call failed:', error);
+    throw error;
+  }
+}
+
+// Special API call for DELETE method
+// Special API call for DELETE method with better error handling
+async function apiDeleteCall(endpoint, data) {
+  try {
+    console.log('Making DELETE request to:', `${API_BASE_URL}${endpoint}`);
+    console.log('With data:', data);
+
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    console.log('DELETE response status:', response.status);
+    console.log('DELETE response headers:', Object.fromEntries(response.headers.entries()));
+
+    // Check if response is JSON
+    const contentType = response.headers.get('content-type');
+    let result;
+    
+    if (contentType && contentType.includes('application/json')) {
+      result = await response.json();
+    } else {
+      // If not JSON, get the text
+      const text = await response.text();
+      console.error('Non-JSON response from DELETE:', text);
+      
+      // If we get a 200 but not JSON, consider it success
+      if (response.ok) {
+        return { message: 'Success' };
+      }
+      throw new Error(`Server returned: ${text.substring(0, 100)}`);
+    }
+    
+    if (!response.ok) {
+      throw new Error(result.error || `Request failed with status ${response.status}`);
+    }
+
+    console.log('DELETE request successful:', result);
+    return result;
+  } catch (error) {
+    console.error('API DELETE call failed:', error);
+    
+    // More specific error messages
+    if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+      throw new Error('Cannot connect to server. Please check your internet connection and try again.');
+    }
+    
+    throw error;
+  }
+}
+
+        // Handle signup form submission
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('signup-name').value.trim();
+            const email = document.getElementById('signup-email').value.trim().toLowerCase();
+            const password = document.getElementById('signup-password').value;
+            
+            // Basic validation
+            if (!name || !email || !password) {
+                showMessage('signup-message', 'Please fill in all fields', 'error');
+                return;
+            }
+            
+            if (password.length < 8) {
+                showMessage('signup-message', 'Password must be at least 8 characters', 'error');
+                return;
+            }
+
+            setLoading(signupBtn, true);
+
+            try {
+                await apiCall('/api/signup', { name, email, password });
+                
+                pendingEmail = email;
+                verificationForm.classList.add('active');
+                signupForm.classList.remove('active');
+                showMessage('signup-message', 'Verification code sent to your email!', 'info');
+                
+            } catch (error) {
+                showMessage('signup-message', error.message, 'error');
+            } finally {
+                setLoading(signupBtn, false);
+            }
+        });
+
+        // Handle verification form submission
+        verificationForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            let enteredCode = '';
+            codeInputs.forEach(input => {
+                enteredCode += input.value;
+            });
+
+            if (enteredCode.length !== 6) {
+                showMessage('verification-message', 'Please enter all 6 digits', 'error');
+                return;
+            }
+
+            setLoading(verifyBtn, true);
+
+            try {
+                await apiCall('/api/verify-email', { 
+                    email: pendingEmail, 
+                    code: enteredCode 
+                });
+
+                showMessage('verification-message', 'Email verified successfully!', 'success');
+                
+                // Clear code inputs
+                codeInputs.forEach(input => input.value = '');
+                
+                // Show success and redirect to login
+                setTimeout(() => {
+                    verificationForm.classList.remove('active');
+                    loginForm.classList.add('active');
+                    loginToggle.classList.add('active');
+                    signupToggle.classList.remove('active');
+                    showMessage('login-message', 'Email verified! You can now login.', 'success');
+                    
+                    // Pre-fill login email
+                    document.getElementById('login-email').value = pendingEmail;
+                    document.getElementById('login-password').focus();
+                }, 1500);
+
+            } catch (error) {
+                showMessage('verification-message', error.message, 'error');
+            } finally {
+                setLoading(verifyBtn, false);
+            }
+        });
+
+        // Handle login form submission
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('login-email').value.trim().toLowerCase();
+            const password = document.getElementById('login-password').value;
+            
+            if (!email || !password) {
+                showMessage('login-message', 'Please fill in all fields', 'error');
+                return;
+            }
+
+            setLoading(loginBtn, true);
+
+            try {
+                const result = await apiCall('/api/login', { email, password });
+                
+                sessionToken = result.sessionToken;
+                document.getElementById('success-title').textContent = `Welcome, ${result.user.name}!`;
+                document.getElementById('success-message').textContent = 
+                    `You have successfully authenticated as ${result.user.email} and can now access your portfolio dashboard.`;
+                
+                successForm.classList.add('active');
+                loginForm.classList.remove('active');
+                
+                // Store session in localStorage for persistence
+                localStorage.setItem('sessionToken', sessionToken);
+                localStorage.setItem('user', JSON.stringify(result.user));
+                
+            } catch (error) {
+                showMessage('login-message', error.message, 'error');
+            } finally {
+                setLoading(loginBtn, false);
+            }
+        });
+
+        // Handle resend code
+        resendLink.addEventListener('click', async () => {
+            if (!pendingEmail) {
+                showMessage('verification-message', 'No pending verification found', 'error');
+                return;
+            }
+
+            setLoading(verifyBtn, true);
+            resendLink.style.pointerEvents = 'none';
+
+            try {
+                await apiCall('/api/resend-code', { email: pendingEmail });
+                showMessage('verification-message', 'Verification code resent! Check your email.', 'info');
+                
+                // Disable resend for 30 seconds
+                setTimeout(() => {
+                    resendLink.style.pointerEvents = 'auto';
+                }, 30000);
+                
+            } catch (error) {
+                showMessage('verification-message', error.message, 'error');
+                resendLink.style.pointerEvents = 'auto';
+            } finally {
+                setLoading(verifyBtn, false);
+            }
+        });
+
+        // Handle logout
+        // Handle logout OR account deletion
+
+        // Handle logout OR account deletion
+logoutBtn.addEventListener('click', async () => {
+  // Ask user if they want to logout or delete account
+  const userChoice = confirm(
+    'Do you want to:\n\n' +
+    '• Click OK to DELETE YOUR ACCOUNT permanently\n' +
+    '• Click Cancel to just logout'
+  );
+
+  if (userChoice) {
+    // User chose to DELETE ACCOUNT
+    if (confirm('⚠️ WARNING: This will permanently delete your account and all data!\n\nThis action cannot be undone. Are you sure?')) {
+      try {
+        // Use the DELETE method call
+        const response = await apiDeleteCall('/api/delete-account', { sessionToken });
+        
+        // Show success message
+        const userData = JSON.parse(localStorage.getItem('user') || '{}');
+        const userName = userData.name || 'User';
+        
+        // Update the success message directly
+        document.getElementById('success-message').textContent = `Account "${userData.email}" deleted successfully. Goodbye!`;
+        document.getElementById('success-message').className = 'message success';
+        document.getElementById('success-message').style.display = 'block';
+        
+        // Clear all state
+        sessionToken = '';
+        pendingEmail = '';
+        localStorage.removeItem('sessionToken');
+        localStorage.removeItem('user');
+        
+        // Clear all forms
+        document.getElementById('login-email').value = '';
+        document.getElementById('login-password').value = '';
+        document.getElementById('signup-name').value = '';
+        document.getElementById('signup-email').value = '';
+        document.getElementById('signup-password').value = '';
+        codeInputs.forEach(input => input.value = '');
+        
+        // Show login form after delay
+        setTimeout(() => {
+          successForm.classList.remove('active');
+          loginForm.classList.add('active');
+          loginToggle.classList.add('active');
+          signupToggle.classList.remove('active');
+          clearMessages();
+        }, 3000);
+        
+      } catch (error) {
+        console.error('Delete account error:', error);
+        alert('Error deleting account: ' + error.message);
+      }
+    }
+  } else {
+    // User chose to just LOGOUT
+    if (sessionToken) {
+      try {
+        await apiCall('/api/logout', { sessionToken });
+      } catch (error) {
+        console.error('Logout error:', error);
+      }
+    }
+
+    // Clear all state
+    sessionToken = '';
+    pendingEmail = '';
+    localStorage.removeItem('sessionToken');
+    localStorage.removeItem('user');
+    
+    // Clear all forms
+    document.getElementById('login-email').value = '';
+    document.getElementById('login-password').value = '';
+    document.getElementById('signup-name').value = '';
+    document.getElementById('signup-email').value = '';
+    document.getElementById('signup-password').value = '';
+    codeInputs.forEach(input => input.value = '');
+    
+    // Show login form
+    successForm.classList.remove('active');
+    loginForm.classList.add('active');
+    loginToggle.classList.add('active');
+    signupToggle.classList.remove('active');
+    clearMessages();
+    
+    showMessage('login-message', 'Logged out successfully', 'success');
+  }
+});
+
+        // Check for existing session on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedSession = localStorage.getItem('sessionToken');
+            const savedUser = localStorage.getItem('user');
+            
+            if (savedSession && savedUser) {
+                sessionToken = savedSession;
+                const user = JSON.parse(savedUser);
+                
+                document.getElementById('success-title').textContent = `Welcome back, ${user.name}!`;
+                document.getElementById('success-message').textContent = 
+                    `You are already logged in as ${user.email}.`;
+                
+                successForm.classList.add('active');
+                loginForm.classList.remove('active');
+                signupForm.classList.remove('active');
+                verificationForm.classList.remove('active');
+            }
+            
+            // Update API_BASE_URL in the console for debugging
+            console.log('API Base URL:', API_BASE_URL);
+            console.log('Make sure to update the API_BASE_URL in the script with your actual Worker URL');
+        });
+
+        // Security: Clear sensitive data on page unload
+        window.addEventListener('beforeunload', () => {
+            // Keep sessionToken in localStorage for persistence
+            // but clear it from memory
+            sessionToken = '';
+        });
+    </script>
+</body>
+</html>
